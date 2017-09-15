@@ -1,0 +1,49 @@
+---
+title: "up02-Yijia-Qiao"
+author: "Yijia Qiao"
+date: "9/15/2017"
+output: html_document
+---
+#**1. Data Analysis for Quantitative Variables** 
+
+``` {r}
+load("/Users/yijiaqiao/stat133/stat133-hws-fall17/warmup02/data/nba2017-salary-points.RData")
+ls()
+```
+
+``` {r}
+summary(points)
+mean(points)
+sd(points)
+min(points)
+max(points)
+median(points)
+quantile(points)
+IQR(points)
+boxplot(points)
+# The histogram along with the density curve of points.
+hist(points, prob = TRUE, col = "lavender")
+lines(density(points), col = "blue")
+```
+
+#**2. Data Analysis for Qualitative Variables** 
+```{r}
+factor (team)
+A <- table (team)
+B <- A/length(team)
+barplot(A, col = "lavender")
+title(main = "frequency table of team", font.main = 6)
+
+barplot(B, col = 'mistyrose')
+title(main = "relative frequency of team", font.main = 6)
+```
+
+#**3. Warmup02 Summary** 
+###What is the overall shape?
+* The overall shape of the histogram is right-tailed.
+
+###What is the typical center?
+* The typical center of the histogram is the median that divides the diagram into two parts of even area.
+
+###Overall range, along with an interval of typical measurements.
+* The players score points from 0 to 2558. The first quartile is 156 points and the third quartile is 780 points. The median is 432 points and all scores average at 546.6 points. 
