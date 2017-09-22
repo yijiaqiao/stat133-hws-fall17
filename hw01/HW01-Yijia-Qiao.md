@@ -92,7 +92,7 @@ summary(y_hat)
 
 ##### **What is the regression equation?**
 
-$\\hat{Y} = b\_0 + b\_1 X$ y\_hat = 1.5090766 + 0.0085576 \* X
+y\_hat = 1.5090766 + 0.0085576 \* X
 
 ##### **How do you interpret b1?**
 

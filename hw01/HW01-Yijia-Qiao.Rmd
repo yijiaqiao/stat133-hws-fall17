@@ -70,7 +70,6 @@ summary(y_hat)
 
 ####Answer questions:
 #####**What is the regression equation?**
-$\hat{Y} = b_0 + b_1 X$
 y_hat = `r b0` + `r b1` * X
 
 #####**How do you interpret b1?**
