@@ -1,0 +1,129 @@
+---
+title: "Yijia-Qiao-HW02"
+author: "Yijia Qiao"
+date: "9/28/2017"
+output: github_document
+---
+
+##1. Importing data
+
+#### a) Importing with "read.csv()"
+```{r}
+dat <- read.csv("/Users/yijiaqiao/stat133/stat133-hws-fall17/hw02/data/nba2017-player-statistics.csv",colClasses = c("Player" = "character", "Team" = "character", "Experience" = "character", "Salary" = "double"))
+str(dat)
+```
+
+#### b) Importing with "read_csv()"
+```{r}
+library(readr)
+dat2 <- read_csv("/Users/yijiaqiao/stat133/stat133-hws-fall17/hw02/data/nba2017-player-statistics.csv", col_types = cols( Player = "c", Team = "c", Position = col_factor(levels = c('C', 'PF', 'PG', 'SF', 'SG'))) )
+str(dat2)
+```
+
+##2. Right after importing data
+```{r}
+dat$Experience[dat$Experience == "R"] <- 0
+dat$Experience <- as.integer(dat$Experience)
+class(dat$Experience)
+```
+
+##3. Performance of players
+```{r}
+library(dplyr)
+#Compute and Add necessary statistics
+Missed_FG <- dat$FGA - dat$FGM
+Missed_FT <- dat$FTA - dat$FTM
+PTS <- 1 * dat$FTM + 2 * dat$Points2 + 3 * dat$Points3 
+REB <- dat$OREB + dat$DREB
+MPG <- dat$MIN / dat$GP
+
+#Compute EFF as "Efficiency"
+EFF <- (PTS + REB + dat$AST + dat$STL + dat$BLK - Missed_FG - Missed_FT - dat$TO) / dat$GP
+
+#Add EFF to dat
+dat3 <- mutate(dat, EFF)
+summary(EFF)
+hist(EFF, main = "Histogram of Efficiency (EFF)", col = "gray")
+
+#Display the player name, team, salary, and EFF value of the top-10 players by EFF in decreasing order (display this information in a data frame).
+dat_top10 <- slice(select(arrange(dat3, desc(EFF)), c('Player', 'Team', 'Salary', 'EFF')), 1:10)
+dat_top10
+
+#Provide the names of the players that have a negative EFF.
+select(filter(dat3, EFF < 0), Player)
+
+#Use the function cor() to compute the correlation coefficients between EFF and all the variables used in the EFF formula.
+r_data <- data.frame(
+  r = c("r1" = cor(EFF, y = PTS, use = "everything"),
+  "r2" <- cor(EFF, y = REB, use = "everything"),
+  cor(EFF, y = dat$STL, use = "everything"),
+  cor(EFF, y = dat$AST, use = "everything"),
+  cor(EFF, y = dat$BLK, use = "everything"),
+  -cor(EFF, y = Missed_FG, use = "everything"),
+  -cor(EFF, y = Missed_FT, use = "everything"),
+  -cor(EFF, y = dat$TO, use = "everything"))
+  )
+r_data <- arrange(r_data,desc(r))
+
+#Barplot the Correlation
+barplot(r_data$r, main = "Correlations between Player Stats and EFF", names.arg = c("PTS", "REB", "STL", "AST", "BLK", "Missed_FT", "Missed_FG", "TO"), axes = TRUE, cex.axis = par("cex.axis"), col = c("lightgray", "lightgray", "lightgray", "lightgray", "lightgray", "mistyrose", "mistyrose", "mistyrose"), ylim = c(-1,1), cex.names = 0.5, border = NA)
+abline(h = 0)
+```
+
+##4. Efficiency and Salary
+```{r}
+#Scatterplot between Efficiency and Salary
+plot(EFF, dat$Salary, main = "Scatterplot between Efficiency and Salary", xlab = "EFF(Efficiency)", ylab = "Salary", col = "#F15C3C55", pch = 19, las = 1, cex = 0.9)
+
+lines(lowess(EFF, dat$Salary), lwd = 3, col = "blue")
+text(25, 16000000, labels = "lowess", col = "blue", cex = 1.5)
+
+#Compute correlation between Efficiency and Salary
+cor(EFF, dat$Salary, use = "everything")
+
+#Comments on r between EFF and Salary: as the correlation coefficient is about 0.655, it means there is a positive correlation between salary and efficiency. The Salary increases as the efficiency increases.
+
+```
+```{r}
+#Rookie players
+dat4 <- mutate(dat3, MPG)
+players2 <- filter(dat4, MPG >= 20)
+players2
+
+#Scatterplot
+plot(players2$EFF, players2$Salary, main = "Scatterplot between Efficiency and Salary for Rookie Players", xlab = "EFF(Efficiency)", ylab = "Salary", col = "#F15C3C55", pch = 19, las = 1, cex = 0.9)
+
+lines(lowess(players2$EFF, players2$Salary), lwd = 3, col = "blue")
+text(25, 16000000, labels = "lowess", col = "blue", cex = 1.5)
+
+#Compute correlation between Efficiency and Salary
+cor(players2$EFF, players2$Salary, use = "everything")
+
+#Comments on r between EFF and Salary for Rookie Players: as the correlation coefficient is about 0.537, it means there is a positive correlation between salary and efficiency. The salary increases as the efficiency inc vvreases.
+```
+
+##5. Comments and Reflections
+####Reflect on what was hard/easy, problems you solved, helpful tutorials you read, etc.
+#####What things were hard, even though you saw them in class/lab?
+* I was struggled with displaying x-axis on the bar chart of correlation.
+
+#####What was easy(-ish) even though we haven???t done it in class/lab?
+* Calculating correlation factors.
+
+#####Did you need help to complete the assignment? If so, what kind of help?
+* Yes, from lab assistants.
+
+#####How much time did it take to complete this HW?
+* About 2 hours.
+
+#####What was the most time consuming part?
+* Importing data and writing data dictionary.
+
+#####Was there anything that you did not understand? or fully grasped?
+* None.
+
+#####Was there anything frustrating in particular?
+* Importing data part and converting into required data types.
+
+#####Was there anything exciting? Something that you feel proud of?
+* Solving all problems by myself is so exciting.
