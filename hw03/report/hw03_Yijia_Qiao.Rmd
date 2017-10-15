@@ -1,0 +1,116 @@
+---
+title: "hw03_Yijia_Qiao"
+author: "Yijia Qiao"
+date: "10/12/2017"
+output: github_document
+---
+###1) About Research Question
+  If you had to come up with a ranking system for the teams, how would you rank them?
+  
+###2) Data Preparation
+  See `make-teams-tables.R` in /code folder.
+  
+###3) Basic Rankings
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+teams1 <- read_csv('./data/nba2017-teams.csv')
+teams1 <- arrange(teams1, desc(salary))
+
+#horizontal barplot
+#salary
+ggplot(data = teams1, aes(x = reorder(team, salary), y = salary)) + geom_bar(stat = 'identity', fill = 'gray66') + coord_flip() + labs(y = 'Salary (in millions)', x = 'Team', title = 'NBA Teams ranked by Total Salary') + geom_hline(yintercept = mean(teams1$salary), color = 'tomato', size = 1)
+#total points
+ggplot(data = teams1, aes(x = reorder(team, points), y = points)) + geom_bar(stat = 'identity', fill = 'gray66') + coord_flip() + labs(y = 'Total Points', x = 'Team', title = 'NBA Teams ranked by Total Points') + geom_hline(yintercept = mean(teams1$points), color = 'tomato', size = 1)
+#efficiency
+ggplot(data = teams1, aes(x = reorder(team, efficiency), y = efficiency)) + geom_bar(stat = 'identity', fill = 'gray66') + coord_flip() + labs(y = 'Total Efficiency', x = 'Team', title = 'NBA Teams ranked by Total Efficiency') + geom_hline(yintercept = mean(teams1$efficiency), color = 'tomato', size = 1)
+```
+
+* Concise descriptions of the obtained rankings:
+
+  The rankings by Total Salary and Total Efficiency give the same result of top team -- CLE but the they give totally different results for other teams. In General, the three rankings show similar results considering three divisions: a team would have higher salary if it ranks relatively high in total efficiency and total points. However, there is exception. For example, although team ORL has the lowest efficiency and gets relatively low points, it has relatively high salary (more than the average salary). Hence, either one of three ranking standards cannot ensure which team is the best team.
+  
+
+###4)Principal Components Analysis (PCA)
+```{r}
+pca <- prcomp(teams1[c('points3', 'points2', "free_throws", 'off_rebounds', 'def_rebounds', 'assists', 'steals', 'blocks', 'turnovers', 'fouls')], scale. = TRUE)
+pca
+eigs <- data.frame(
+  eigenvalues = round(pca$sdev^2,4),
+  prop = round(pca$sdev^2/sum(pca$sdev^2), 4)
+)
+eigs <- mutate(eigs, cumprop = cumsum(eigs$prop))
+eigs
+pca1 <- data.frame(
+  PC1 = pca$x[ , 1],
+  PC2 = pca$x[ , 2],
+  names = teams1$team
+)
+```
+
+```{r}
+#PCA plot
+ggplot(pca1, aes(x = PC1, y = PC2)) + geom_text(aes(label = names)) + ggtitle("PCA plot (PC1 and PC2)")
+
+#recale PC1
+s1 <- 100 * (pca1$PC1 - min(pca1$PC1)) / (max(pca1$PC1)- min(pca1$PC1))
+pca2 <- mutate(pca1, s1)
+
+#barchart
+ggplot(data = pca2, aes(x = reorder(names, s1), y = s1)) + geom_bar(stat = 'identity', fill = 'gray66') + coord_flip() + labs(y = 'First PC (scaled from 0 to 100)', x = 'Team', title = 'NBA Teams ranked by scaled PC1') 
+```
+
+* Brief description of PC1 index to rank the teams
+
+  By calculating the linear correlations between those given variables, the principal components of teams show a clear and distinct ranking system comparing with ordinary ranking analysis. The top team with the highest PC1 index is GSW and the lowest team is SAC. There is a large index gap between PC1 index of SAC and of GSW. Since the PC1 index considers each part of ranking variables, the large index gap can tell the difference between two teams and gives a high rank to GSW.
+  
+###5) Comments and Reflections
+
+* Reflect on what was hard/easy, problems you solved, helpful tutorials you read, etc.
+  
+  PCA part was relatively hard and reading the R manuals and lecture slides helps me to understand the structure of list I got from prcomp() function.
+
+* Was this your first time working on a project with such file structure? If yes, how do
+you feel about it?
+
+  Yes, this is my first time. I felt difficult to remember what data name I already used in previous codes.
+  
+* Was this your first time using relative paths? If yes, can you tell why they are important
+for reproducibility purposes?
+
+  No. Without choosing file from the beginning, I saved a lot of time by working in my current directory.
+  
+* Was this your first time using an R script? If yes, what do you think about just writing
+code?
+
+No. 
+
+* What things were hard, even though you saw them in class/lab?
+
+  PCA part is hard as for me. It is hard to imagine the data structure when it's beyond 2D.
+  
+* What was easy(-ish) even though we haven???t done it in class/lab?
+
+  Doing relative paths is easy.
+
+* Did anyone help you completing the assignment? If so, who?
+  
+  Piazza.
+  
+* How much time did it take to complete this HW?
+
+  Half day.
+
+* What was the most time consuming part?
+  
+  Understanding data structure got from PCA function and how to plot using those data.
+  
+* Was there anything interesting?
+
+  Creating new files by typing codes in one window is interesting.
+
+
+
+
+
