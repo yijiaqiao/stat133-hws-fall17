@@ -2,7 +2,7 @@
 title: "Faceting--Better Data Visualization with Plot Partition"
 author: "Yijia Qiao"
 date: "10/30/2017"
-output: html_document
+output: github_document
 ---
 ## Motivation  
 
