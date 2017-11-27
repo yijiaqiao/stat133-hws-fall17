@@ -51,4 +51,13 @@ runGitHub("stat133-hws-fall17", "yijiaqiao", subdir = "hw04/app")
 
 ### Comments and Reflections
 
-Reflect on what was hard/easy, problems you solved, helpful tutorials you read, etc. \* Was this your first time writing unit tests? This is my first time with unit tests. \* On a scale from 0 to 10, how confusing you found the logic of testthat tests? (0 not at all, 10 very confusing) I think 4.5. \* Was this your first time working with ggvis? This was my first time working with ggvis. \* On a scale from 0 to 10, how confusing you found the syntax of ggvis? (0 not at all, 10 very confusing) Ggvis has different syntaxes but its syntaxes are quite clear when people read. SO i think 8. \* Was this your first time working with conditional panels in shiny? This was my first time. \* On a scale from 0 to 10, how challenging you found to work with the conditional panels? (0 not at all, 10 very challenging) 6. \* So far we???ve exposed you to three graphing paradigms in R: base plots, ggplot, and now ggvis. Which do you like the most and why? I like ggplot the most. Because it has clear and simple structure to do graph layers. Also it's pretty. \* Did anyone help you completing the assignment? If so, who? Yes. I asked GSI and peers for helping with debugging. \* How much time did it take to complete this HW? About 6 hours. \* What was the most time consuming part? Shiny app.
+-   Was this your first time writing unit tests? --This is my first time with unit tests.
+-   On a scale from 0 to 10, how confusing you found the logic of testthat tests? --I think 4.5.
+-   Was this your first time working with ggvis? --This was my first time working with ggvis.
+-   On a scale from 0 to 10, how confusing you found the syntax of ggvis? --Ggvis has different syntaxes but its syntaxes are quite clear when people read. So I think 8.
+-   Was this your first time working with conditional panels in shiny? --This was my first time.
+-   On a scale from 0 to 10, how challenging you found to work with the conditional panels? --6.
+-   So far we???ve exposed you to three graphing paradigms in R: base plots, ggplot, and now ggvis. Which do you like the most and why? --I like ggplot the most. Because it has clear and simple structure to do graph layers. Also it's pretty.
+-   Did anyone help you completing the assignment? If so, who? --Yes. I asked GSI and peers for helping with debugging.
+-   How much time did it take to complete this HW? --About 6 hours.
+-   What was the most time consuming part? --Shiny app.
